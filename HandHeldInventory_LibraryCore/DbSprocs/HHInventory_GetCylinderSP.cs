@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace HandHeldInventory_LibraryCore.DbSprocs
 {
-    public class HHInventory_GetCylinderSP
+    public class HHInventory_GetCylinderSP : IHHInventory_GetCylinderSP
     {
         private readonly IDataAccess _dataAccess;
         private readonly ConnectionStringData _connectionString;
@@ -42,7 +42,7 @@ namespace HandHeldInventory_LibraryCore.DbSprocs
             };
 
             DataSet ds = _dataAccess.ExecuteProcedureReturnDataSet(_connectionString.SqlConnectionName, "HHInventory_GetCylinder", parameters);
-            DataTable dt = ds.Tables[0]; 
+            DataTable dt = ds.Tables[0];
             DataTable outParameters = ds.Tables[1];
             vm = Converter.DataConvertToListObj<HHInventory_GetCylinderVM>(dt);
             vm[0].OutFlag = Convert.ToInt32(outParameters.Rows[1].ItemArray[1]);
