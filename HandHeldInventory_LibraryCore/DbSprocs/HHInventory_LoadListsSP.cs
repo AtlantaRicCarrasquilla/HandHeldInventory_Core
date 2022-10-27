@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace HandHeldInventory_LibraryCore.DbSprocs
 {
-    public class HHInventory_LoadListsSP
+    public class HHInventory_LoadListsSP : IHHInventory_LoadListsSP
     {
         private readonly IDataAccess _dataAccess;
         private readonly ConnectionStringData _connectionString;

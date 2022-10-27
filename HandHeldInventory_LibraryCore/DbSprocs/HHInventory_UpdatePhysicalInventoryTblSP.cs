@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace HandHeldInventory_LibraryCore.DbSprocs
 {
-    public class HHInventory_UpdatePhysicalInventoryTblSP
+    public class HHInventory_UpdatePhysicalInventoryTblSP : IHHInventory_UpdatePhysicalInventoryTblSP
     {
         private readonly IDataAccess _dataAccess;
         private readonly ConnectionStringData _connectionString;
@@ -60,7 +60,7 @@ namespace HandHeldInventory_LibraryCore.DbSprocs
             };
 
             List<SqlParameter> outParam = _dataAccess.ExecuteProcedureReturnOutputParameters(_connectionString.SqlConnectionName, "HHInventory_UpdatePhysicalInventoryTbl", parameters);
-            return Convert.ToString(outParam[28].SqlValue); ;
+            return Convert.ToString(outParam[28].SqlValue); 
         }
     }
 }
