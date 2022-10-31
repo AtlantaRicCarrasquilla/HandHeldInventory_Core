@@ -1,6 +1,8 @@
 ﻿
 var btnHHI_LoadLists = document.getElementById("btnHHI_LoadLists");
 var result = document.getElementById("result");
+var txtBarcode = document.getElementById('txtBarcode');
+
 const cylinderSizes = [];
 const cylinderStatuses = [];
 const gases = [];
@@ -16,12 +18,12 @@ function createGas(id, gasName) {
 };
 
 // Constructor Function
-function CylinderStatus(statusId, statusName){
+function CylinderStatus(statusId, statusName) {
     this.statusId = statusId;
     this.statusName = statusName;
     this.default = 'N'
 };
-function CylinderSize(id, cylSizeId){
+function CylinderSize(id, cylSizeId) {
     this.id = id;
     this.cylSizeId = cylSizeId;
     this.default = 'N'
@@ -55,10 +57,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 btnHHI_GetCylinder.addEventListener('click',
     (e) => {
-        var url = `${baseUrl}/api/HH_Inventory/HHInventory_GetCylinder?barcode=000176`;
+        let barcode = txtBarcode.value;
+        let cylinder;
+        callDB();
+        var url = `${baseUrl}/api/HH_Inventory/HHInventory_GetCylinder?barcode=${barcode}`;
         var obj = FetchPost(url, null);
         obj.then((res) => {
-            const cylinder = new Cylinder(res[0].barcode, res[0].itemNum, res[0].cylStatus, res[0].statusName)
+            cylinder = new Cylinder(res[0].barcode, res[0].itemNum, res[0].cylStatus, res[0].statusName);
+            result.innerHTML = cylinder.itemNum;
         });
     });
 
@@ -74,4 +80,51 @@ async function FetchPost(url, obj) {
     const response = await fetch(url, options);
     const data = await response.json();
     return data;
+}
+
+function makeLoad() {
+    console.log(`Making Request to Load`);
+    var url = `${baseUrl}/api/HH_Inventory/HHInventory_LoadLists`;
+    var obj = FetchPost(url, null);
+    return obj;
+}
+
+function processCylinder(response) {
+    console.log('Processing Cylinder response');
+    let barcode = txtBarcode.value;
+    var url = `${baseUrl}/api/HH_Inventory/HHInventory_GetCylinder?barcode=${barcode}`;
+    var obj = FetchPost(url, null);
+    return obj;
+}
+
+async function callDB() {
+    const response = await makeLoad();
+    console.log(`Load Response received ${response}`);
+    const process = await processCylinder(response);
+    console.log(`Complete : ${process}`);
+}
+
+function makeRequest(location) {
+    return new Promise((resolve, reject) => {
+        console.log(`Making Request to ${location}`);
+        if (location === 'Google') {
+            resolve('Google says hi');
+        } else {
+            reject('We can only talk to Google');
+        }
+    })
+}
+
+function processRequest(response) {
+    return new Promise((resolve, reject) => {
+        console.log('Processing response');
+        resolve(`Extra Information ${response}`);
+    });
+}
+
+async function doWork() {
+    const response = await makeRequest('Google');
+    console.log('Response received');
+    const process = await processRequest(response);
+    console.log(process);
 }
