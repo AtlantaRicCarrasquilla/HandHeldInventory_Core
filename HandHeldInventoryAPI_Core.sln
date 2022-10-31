@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HandHeldInventory_LibraryCo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HandHeldInventoryConsole_Core", "HandHeldInventoryConsole_Core\HandHeldInventoryConsole_Core.csproj", "{05F22A33-8DCF-489C-9455-A41660F9EBC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HHI_APICoreWithLibrary", "HHI_APICoreWithLibrary\HHI_APICoreWithLibrary.csproj", "{823CC424-7F7A-4921-997E-182DEA03ECD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HHI_APICoreWithLibrary", "HHI_APICoreWithLibrary\HHI_APICoreWithLibrary.csproj", "{823CC424-7F7A-4921-997E-182DEA03ECD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HHInventory_HTMLNet", "HHInventory_HTMLNet\HHInventory_HTMLNet.csproj", "{3E11BD38-135A-4F9C-83DC-581B696D9A0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{823CC424-7F7A-4921-997E-182DEA03ECD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{823CC424-7F7A-4921-997E-182DEA03ECD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{823CC424-7F7A-4921-997E-182DEA03ECD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E11BD38-135A-4F9C-83DC-581B696D9A0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E11BD38-135A-4F9C-83DC-581B696D9A0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E11BD38-135A-4F9C-83DC-581B696D9A0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E11BD38-135A-4F9C-83DC-581B696D9A0D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

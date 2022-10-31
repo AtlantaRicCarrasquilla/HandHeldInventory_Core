@@ -3,6 +3,7 @@ using HandHeldInventory_LibraryCore.Db;
 using HandHeldInventory_LibraryCore.DbSprocs;
 
 var builder = WebApplication.CreateBuilder(args);
+var MyAllowedSpecificOrigins = "_myAllowSpecificOrigins";
 
 // Add services to the container.
 
@@ -20,6 +21,17 @@ builder.Services.AddSingleton<IHHInventory_UpdatePhysicalInventoryTblSP, HHInven
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(MyAllowedSpecificOrigins
+        , builder =>
+        {
+            builder.AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -29,7 +41,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
+app.UseCors(MyAllowedSpecificOrigins);
 
 app.UseAuthorization();
 
