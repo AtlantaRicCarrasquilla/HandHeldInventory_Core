@@ -45,6 +45,13 @@ namespace HandHeldInventory_LibraryCore.DbSprocs
             DataTable dt = ds.Tables[0];
             DataTable outParameters = ds.Tables[1];
             vm = Converter.DataConvertToListObj<HHInventory_GetCylinderVM>(dt);
+
+            if (vm.Count == 0)
+            {
+                HHInventory_GetCylinderVM vm2 = new HHInventory_GetCylinderVM();
+                vm.Add(vm2);
+            }
+
             vm[0].OutFlag = Convert.ToInt32(outParameters.Rows[1].ItemArray[1]);
             vm[0].OutMessage = Convert.ToString(outParameters.Rows[2].ItemArray[1]);
             return vm;
