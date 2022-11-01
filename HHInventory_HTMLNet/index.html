@@ -3,6 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <title>Hand-held Inventory</title>
+    <style>
+        body 
+        {
+            font-family: Arial, Helvetica, sans-serif;
+        }        
+    </style>
+    <link href="styles/modal.css" rel="stylesheet" />
 </head>
 <body>
     Barcode : <input type="text" id="txtBarcode" />
@@ -27,10 +34,24 @@
     <br />
     Mixed Gas Name : <span id="spnMixedGasPrimeCompName"></span>
     <br />
-    <button id="btnHHI_GetCylinder">Submit</button>
-    <div id="result">
+    <button id="btnHHI_UpdateCylinder">Update Cylinder</button>
+    <br />
+    <div id="result"></div>
+    <br />
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalText"></p>
+            <p id="modalCylinderSizes">
+                <select id="selCylinderSizes"></select>
+            </p>
+            <button id="btnModal">Save</button>
+        </div>
 
     </div>
-    <script language="javascript" src="scripts.js"></script>
+    <script language="javascript" src="js/scripts.js"></script>
 </body>
 </html>

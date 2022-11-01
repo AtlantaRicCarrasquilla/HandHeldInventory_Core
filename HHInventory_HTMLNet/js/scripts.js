@@ -1,5 +1,5 @@
 ﻿
-const btnHHI_LoadLists = document.getElementById("btnHHI_LoadLists");
+const btnHHI_UpdateCylinder = document.getElementById("btnHHI_UpdateCylinder");
 const result = document.getElementById("result");
 const txtBarcode = document.getElementById('txtBarcode');
 const spnItemNum = document.getElementById('spnItemNum');
@@ -12,6 +12,12 @@ const spnNets = document.getElementById("spnNet");
 const spnNetBoilOff = document.getElementById("spnNetBoilOff");
 const spnPurity = document.getElementById("spnPurity");
 const spnMixedGasPrimeCompName = document.getElementById("spnMixedGasPrimeCompName");
+const selCylinderSizes = document.getElementById("selCylinderSizes");
+
+let cylinder;
+
+// Get the modal
+const modal = document.getElementById("myModal");
 
 const cylinderSizes = [];
 const cylinderStatuses = [];
@@ -19,6 +25,19 @@ const elementsInnerHTML = [spnItemNum, spnStatusName, spnCustId, spnCustOwned, s
 const gases = [];
 const baseUrl = `http://localhost:1011`;
 
+// Get the <span> element that closes the modal
+const span = document.getElementsByClassName("close")[0];
+// When the user clicks on <span> (x), close the modal
+span.onclick = function () {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 //Factory Function
 function createGas(id, gasName) {
     return {
@@ -78,10 +97,9 @@ document.addEventListener("DOMContentLoaded", function () {
     })
 });
 
-btnHHI_GetCylinder.addEventListener('click',
+txtBarcode.addEventListener('focusout',
     (e) => {
         let barcode = txtBarcode.value;
-        let cylinder;
         elementsInnerHTML.forEach((e, i) => {
             e.innerHTML = "";
         });
@@ -166,3 +184,24 @@ async function doWork() {
     const process = await processRequest(response);
     console.log(process);
 }
+
+btnHHI_UpdateCylinder.addEventListener('click',
+    (e) => {
+        modal.style.display = "block";
+        modalText.innerHTML = cylinder.barcode;
+        let defaultOpt = new Option("Pick Cylinder Size", 0);
+        selCylinderSizes.add(defaultOpt, 0)
+        let currentOpt = new Option(cylinder.itemNum, cylinder.itemNum);
+        selCylinderSizes.add(currentOpt, 1);
+        cylinderSizes.forEach((e) => {
+            let newOption = new Option(e.cylSizeId, e.cylSizeId);
+            selCylinderSizes.add(newOption, undefined);
+        });;
+    });
+
+selCylinderSizes.addEventListener('change', (self) => {
+    let el = self.target;
+    let value = el.options[el.selectedIndex].value;
+    let txt = el.options[el.selectedIndex].text;
+    console.log(`element : ${el} value : ${value} txt : ${txt}`);
+})
