@@ -21,7 +21,7 @@ namespace HandHeldInventoryConsole_Core
         {
             GetAppSettingsFile();
             //SP_HHInventory_LoadLists();
-            //SP_HHInventory_GetCylinder("000176");
+            SP_HHInventory_GetCylinder("000176");
             HHInventory_UpdatePhysicalInventoryDTO dto = new HHInventory_UpdatePhysicalInventoryDTO();
             dto.Barcode = "000176";
             dto.CUBr = 1;
@@ -52,7 +52,7 @@ namespace HandHeldInventoryConsole_Core
             dto.ActualNetBoilOff = 0;
             dto.ActualMixedGasPrimeCompName = "Empty";
             dto.Comment = "this is a test";
-            SP_HHInventory_UpdatePhysicalInventoryTbl(dto);
+            //SP_HHInventory_UpdatePhysicalInventoryTbl(dto);
             Console.ReadLine();
         }
         static void GetAppSettingsFile()
