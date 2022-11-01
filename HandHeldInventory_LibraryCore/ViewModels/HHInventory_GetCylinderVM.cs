@@ -16,6 +16,7 @@ namespace HandHeldInventory_LibraryCore.ViewModels
         public string? CustId { get; set; }
         public string? BusinessAddr { get; set; }
         public int GasId { get; set; } = 0;
+        public string? GasName { get; set; }
         public decimal Net { get; set; } = 0;
         public decimal NetBoilOff { get; set; } = 0;
         public int MixedGasPrimeCompId { get; set; } = 0;
