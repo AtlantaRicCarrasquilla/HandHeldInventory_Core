@@ -77,6 +77,19 @@ function Cylinder(barcode, itemNum, cylStatus, statusName, custOwned, custId, bu
     this.outMessage = outMessage;
 }
 
+function sizeMe() {
+    const sizes = cylinderSizes.map((e) => {
+        return e.cylSizeId;
+    });
+    return sizes;
+}
+
+let mySizes;
+//cylinderSizes.forEach((i, k) => {
+//    //const cylinderSize = new CylinderSize(res['cylinderSizes'][k].id, cylinderSizes[k].cylSizeId);
+//    mySizes.push(cylinderSizes[k].cylSizeId);
+//});
+
 // page load - load default lists
 document.addEventListener("DOMContentLoaded", function () {
     var url = `${baseUrl}/api/HH_Inventory/HHInventory_LoadLists`;
@@ -94,36 +107,50 @@ document.addEventListener("DOMContentLoaded", function () {
             const cylinderSize = new CylinderSize(res['cylinderSizes'][k].id, res['cylinderSizes'][k].cylSizeId);
             cylinderSizes.push(cylinderSize);
         });
-    })
+        mySizes = res['cylinderSizes'].map((i, k) => {
+            return i.cylSizeId;
+        });
+
+        autocomplete(document.getElementById("myInput"), mySizes);
+        autocomplete(document.getElementById("txtCylinderSizes"), mySizes);
+    });
+
 });
 
 txtBarcode.addEventListener('focusout',
     (e) => {
         let barcode = txtBarcode.value;
+        //clear form
         elementsInnerHTML.forEach((e, i) => {
             e.innerHTML = "";
         });
         callDB();
-        var url = `${baseUrl}/api/HH_Inventory/HHInventory_GetCylinder?barcode=${barcode}`;
-        var obj = FetchPost(url, null);
-        obj.then((res) => {
-            cylinder = new Cylinder(res[0].barcode, res[0].itemNum, res[0].cylStatus, res[0].statusName, res[0].custOwned, res[0].custId, res[0].businessAddr, res[0].gasId, res[0].gasName, res[0].net, res[0].netBoilOff, res[0].mixedGasPrimeCompId, res[0].mixedGasPrimeCompName, res[0].purity, res[0].outFlag, res[0].outMessage);
-            if (cylinder.outFlag !== 100) {
-                spnItemNum.innerHTML = cylinder.itemNum;
-                spnStatusName.innerHTML = cylinder.statusName;
-                spnCustId.innerHTML = cylinder.custId;
-                spnCustOwned.innerHTML = cylinder.custOwned;
-                spnBusinessAddr.innerHTML = cylinder.businessAddr;
-                spnGasName.innerHTML = cylinder.gasId === 0 ? 'Empty' : cylinder.gasName;
-                spnNets.innerHTML = cylinder.net;
-                spnNetBoilOff.innerHTML = cylinder.netBoilOff;
-                spnPurity.innerHTML = cylinder.purity;
-                spnMixedGasPrimeCompName.innerHTML = cylinder.mixedGasPrimeCompId === 0 ? 'Not Mixed Gas' : cylinder.mixedGasPrimeCompName;
-            }
-            result.innerHTML = `${barcode} : Flag : ${cylinder.outFlag} : Message : ${cylinder.outMessage}`;
-        });
+        GetCylinder(barcode);        
     });
 
+async function GetCylinder(barcode) {
+    var url = `${baseUrl}/api/HH_Inventory/HHInventory_GetCylinder?barcode=${barcode}`;
+    var obj = FetchPost(url, null);
+    obj.then((res) => {
+        cylinder = new Cylinder(res[0].barcode, res[0].itemNum, res[0].cylStatus, res[0].statusName, res[0].custOwned, res[0].custId, res[0].businessAddr, res[0].gasId, res[0].gasName, res[0].net, res[0].netBoilOff, res[0].mixedGasPrimeCompId, res[0].mixedGasPrimeCompName, res[0].purity, res[0].outFlag, res[0].outMessage);
+        if (cylinder.outFlag !== 100) {
+            spnItemNum.innerHTML = cylinder.itemNum;
+            spnStatusName.innerHTML = cylinder.statusName;
+            spnCustId.innerHTML = cylinder.custId;
+            spnCustOwned.innerHTML = cylinder.custOwned;
+            spnBusinessAddr.innerHTML = cylinder.businessAddr;
+            spnGasName.innerHTML = cylinder.gasId === 0 ? 'Empty' : cylinder.gasName;
+            spnNets.innerHTML = cylinder.net;
+            spnNetBoilOff.innerHTML = cylinder.netBoilOff;
+            spnPurity.innerHTML = cylinder.purity;
+            spnMixedGasPrimeCompName.innerHTML = cylinder.mixedGasPrimeCompId === 0 ? 'Not Mixed Gas' : cylinder.mixedGasPrimeCompName;
+        }
+        result.innerHTML = `${barcode} : Flag : ${cylinder.outFlag} : Message : ${cylinder.outMessage}`;
+    });
+}
+function LoadPageArrays() {
+
+}
 async function FetchPost(url, obj) {
     let options = {
         method: 'POST',
