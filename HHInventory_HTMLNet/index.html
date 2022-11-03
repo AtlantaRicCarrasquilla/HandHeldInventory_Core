@@ -3,9 +3,11 @@
 <head>
     <meta charset="utf-8" />
     <title>Hand-held Inventory</title>
+    <link href="styles/typeahead.css" rel="stylesheet" />
+    <link href="styles/modal.css" rel="stylesheet" />
 </head>
 <body>
-    Barcode : <input type="text" id="txtBarcode" />
+    Barcode : <input type="text" id="txtBarcode" placeholder="Barcode" />
     <br />
     Cylinder Size : <span id="spnItemNum"></span>
     <br />
@@ -27,10 +29,43 @@
     <br />
     Mixed Gas Name : <span id="spnMixedGasPrimeCompName"></span>
     <br />
-    <button id="btnHHI_GetCylinder">Submit</button>
-    <div id="result">
+    <br />
+    <button id="btnHHI_UpdateCylinder">Update Cylinder</button>
+    <br />
+    <p>
+        <div id="result"></div>
+    </p>
 
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalText"></p>
+            <br />
+            <p>
+                Current Cylinder Size : <span id="currentCylinderSize"></span>
+                <br />
+                <div class="autocomplete" style="width:300px;">
+                    <input id="txtCylinderSizes" type="text" name="cylinderSizes" placeholder="Cylinder Size">
+                </div>
+            </p>
+            <p id="modalCylinderStatuses">
+                Cylinder Status : <select id="selCylinderStatuses"></select>
+            </p>
+            <br />
+            <p>
+                <div class="autocomplete" style="width:300px;">
+                    <input id="txtCylinderGases" type="text" name="cylinderGases" placeholder="Cylinder Gases">
+                    <input type="hidden" id="hdnCylinderGasId" />
+                </div>
+            </p>
+            <br />
+            <button id="btnModal">Save</button>
+        </div>
     </div>
-    <script language="javascript" src="scripts.js"></script>
+
+    <script language="javascript" src="js/scripts.js"></script>
+    <script language="javascript" src="js/typeahead.js"></script>
 </body>
 </html>
