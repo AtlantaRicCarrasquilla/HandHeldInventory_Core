@@ -29,13 +29,12 @@
     <br />
     Mixed Gas Name : <span id="spnMixedGasPrimeCompName"></span>
     <br />
-    <div class="autocomplete" style="width:300px;">
-        <input id="myInput" type="text" name="myCountry" placeholder="Country">
-    </div>
     <br />
     <button id="btnHHI_UpdateCylinder">Update Cylinder</button>
     <br />
-    <div id="result"></div>
+    <p>
+        <div id="result"></div>
+    </p>
 
     <!-- The Modal -->
     <div id="myModal" class="modal">
@@ -43,16 +42,26 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <p id="modalText"></p>
-            <p id="modalCylinderSizes">
-                <select id="selCylinderSizes"></select>
+            <br />
+            <p>
+                Current Cylinder Size : <span id="currentCylinderSize"></span>
+                <br />
+                <div class="autocomplete" style="width:300px;">
+                    <input id="txtCylinderSizes" type="text" name="cylinderSizes" placeholder="Cylinder Size">
+                </div>
             </p>
             <p id="modalCylinderStatuses">
+                Cylinder Status : <select id="selCylinderStatuses"></select>
             </p>
-            <button id="btnModal">Save</button>
             <br />
-            <div class="autocomplete" style="width:300px;">
-                <input id="txtCylinderSizes" type="text" name="cylinderSizes" placeholder="Cylinder Size">
-            </div>
+            <p>
+                <div class="autocomplete" style="width:300px;">
+                    <input id="txtCylinderGases" type="text" name="cylinderGases" placeholder="Cylinder Gases">
+                    <input type="hidden" id="hdnCylinderGasId" />
+                </div>
+            </p>
+            <br />
+            <button id="btnModal">Save</button>
         </div>
     </div>
 

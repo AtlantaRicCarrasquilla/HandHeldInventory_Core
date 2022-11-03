@@ -12,17 +12,22 @@ const spnNets = document.getElementById("spnNet");
 const spnNetBoilOff = document.getElementById("spnNetBoilOff");
 const spnPurity = document.getElementById("spnPurity");
 const spnMixedGasPrimeCompName = document.getElementById("spnMixedGasPrimeCompName");
-const selCylinderSizes = document.getElementById("selCylinderSizes");
+const selCylinderStatuses = document.getElementById("selCylinderStatuses");
+const txtCylinderGases = document.getElementById("txtCylinderGases");
+const txtCylinderSizes = document.getElementById("txtCylinderSizes");
+const btnModal = document.getElementById('btnModal');
+const hdnCylinderGasId = document.getElementById('hdnCylinderGasId');
+const currentCylinderSize = document.getElementById('currentCylinderSize');
 
 let cylinder;
 
 // Get the modal
 const modal = document.getElementById("myModal");
 
-const cylinderSizes = [];
-const cylinderStatuses = [];
+let cylinderSizes;
+let cylinderStatuses;
 const elementsInnerHTML = [spnItemNum, spnStatusName, spnCustId, spnCustOwned, spnBusinessAddr, spnGasNames, spnNets, spnNetBoilOff, spnPurity, spnMixedGasPrimeCompName];
-const gases = [];
+let gases;
 const baseUrl = `http://localhost:1011`;
 
 // Get the <span> element that closes the modal
@@ -77,45 +82,70 @@ function Cylinder(barcode, itemNum, cylStatus, statusName, custOwned, custId, bu
     this.outMessage = outMessage;
 }
 
-function sizeMe() {
-    const sizes = cylinderSizes.map((e) => {
-        return e.cylSizeId;
-    });
-    return sizes;
-}
-
-let mySizes;
-//cylinderSizes.forEach((i, k) => {
-//    //const cylinderSize = new CylinderSize(res['cylinderSizes'][k].id, cylinderSizes[k].cylSizeId);
-//    mySizes.push(cylinderSizes[k].cylSizeId);
-//});
-
 // page load - load default lists
 document.addEventListener("DOMContentLoaded", function () {
     var url = `${baseUrl}/api/HH_Inventory/HHInventory_LoadLists`;
-    var obj = FetchPost(url, null);
-    obj.then((res) => {
-        res['cylinderStatues'].forEach((i, k) => {
-            const status = new CylinderStatus(res['cylinderStatues'][k].statusId, res['cylinderStatues'][k].statusName);
-            cylinderStatuses.push(status);
-        });
-        res['gases'].forEach((i, k) => {
-            const gas = createGas(res['gases'][k].gasId, res['gases'][k].gasName);
-            gases.push(gas);
-        });
-        res['cylinderSizes'].forEach((i, k) => {
-            const cylinderSize = new CylinderSize(res['cylinderSizes'][k].id, res['cylinderSizes'][k].cylSizeId);
-            cylinderSizes.push(cylinderSize);
-        });
-        mySizes = res['cylinderSizes'].map((i, k) => {
-            return i.cylSizeId;
-        });
-
-        autocomplete(document.getElementById("myInput"), mySizes);
-        autocomplete(document.getElementById("txtCylinderSizes"), mySizes);
-    });
-
+    var obj = PageLoader();
 });
+
+async function PageLoader() {
+    var url = `${baseUrl}/api/HH_Inventory/HHInventory_LoadLists`;
+    let obj;
+    try {
+        obj = await FetchPost(url, null)
+        cylinderSizes = await makeCylinderSizes(obj.cylinderSizes);
+        cylinderStatuses = await makeCylinderStatues(obj.cylinderStatues);
+        gases = await makeGases(obj.gases);
+        autocomplete(txtCylinderSizes, cylinderSizes);
+        autocomplete(txtCylinderGases, gases.map((e) => { return e.gasName }));        
+    } catch (e) {
+        console.log(`Error ${e}`);
+    }
+    return obj;
+}
+
+function makeCylinderSizes(obj) {
+    return new Promise((resolve, reject) => {
+        const itemNums = obj.map((e) => {
+            return e.cylSizeId;
+        });
+        try {
+            resolve(itemNums);
+        } catch (e) {
+            reject(`Cylinder sizes error : ${e}`)
+        }
+    })
+};
+function makeCylinderStatues(obj) {
+    return new Promise((resolve, reject) => {
+        const statuses = obj.map((e) => {
+            return e;
+        });
+        try {
+            resolve(statuses);
+        } catch (e) {
+            reject(`Cylinder Statues error : ${e}`)
+        }
+    })
+};
+
+function makeGases(obj) {
+    return new Promise((resolve, reject) => {
+        const gases = obj.map((e) => {
+            return e;
+        });
+        try {
+            resolve(gases);
+        } catch (e) {
+            reject(`Gas error : ${e}`)
+        }
+    })
+};
+txtCylinderGases.addEventListener('click'
+    , ((e) => {
+        console.log(`Change : ${txtCylinderGases.value}`);
+    })
+);
 
 txtBarcode.addEventListener('focusout',
     (e) => {
@@ -127,6 +157,16 @@ txtBarcode.addEventListener('focusout',
         callDB();
         GetCylinder(barcode);        
     });
+
+btnModal.addEventListener('click', (e) => {
+    const gasValue = txtCylinderGases.value;
+    const gas = gases.filter(
+        (ele) => {
+            return ele.gasName === gasValue;
+        });
+    hdnCylinderGasId.value = gas[0].gasId;
+    console.log(`Cylinder Gas : ${hdnCylinderGasId.value}`);
+})
 
 async function GetCylinder(barcode) {
     var url = `${baseUrl}/api/HH_Inventory/HHInventory_GetCylinder?barcode=${barcode}`;
@@ -148,9 +188,7 @@ async function GetCylinder(barcode) {
         result.innerHTML = `${barcode} : Flag : ${cylinder.outFlag} : Message : ${cylinder.outMessage}`;
     });
 }
-function LoadPageArrays() {
 
-}
 async function FetchPost(url, obj) {
     let options = {
         method: 'POST',
@@ -216,17 +254,18 @@ btnHHI_UpdateCylinder.addEventListener('click',
     (e) => {
         modal.style.display = "block";
         modalText.innerHTML = cylinder.barcode;
-        let defaultOpt = new Option("Pick Cylinder Size", 0);
-        selCylinderSizes.add(defaultOpt, 0)
-        let currentOpt = new Option(cylinder.itemNum, cylinder.itemNum);
-        selCylinderSizes.add(currentOpt, 1);
-        cylinderSizes.forEach((e) => {
-            let newOption = new Option(e.cylSizeId, e.cylSizeId);
-            selCylinderSizes.add(newOption, undefined);
+        currentCylinderSize.innerHTML = cylinder.itemNum;
+        let defaultOpt = new Option("Pick Cylinder Status", 0);
+        selCylinderStatuses.add(defaultOpt, 0)
+        let currentOpt = new Option(cylinder.statusName, cylinder.cylStatus);
+        selCylinderStatuses.add(currentOpt, 1);
+        cylinderStatuses.forEach((e) => {
+            let newOption = new Option(e.statusName, e.statusId);
+            selCylinderStatuses.add(newOption, undefined);
         });;
     });
 
-selCylinderSizes.addEventListener('change', (self) => {
+selCylinderStatuses.addEventListener('change', (self) => {
     let el = self.target;
     let value = el.options[el.selectedIndex].value;
     let txt = el.options[el.selectedIndex].text;
